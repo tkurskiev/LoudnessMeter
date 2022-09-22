@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoudnessMeter", "LoudnessMeter\LoudnessMeter.csproj", "{D38083E8-189A-4A9E-B9AF-73D13E5E2717}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoudnessMeter.Android", "LoudnessMeter.Android\LoudnessMeter.Android.csproj", "{C75D9541-E057-41C3-B3ED-45AA8B7C5C5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoudnessMeter.Desktop", "LoudnessMeter.Desktop\LoudnessMeter.Desktop.csproj", "{D5BCA9D3-21A1-4761-A29C-B20FB976ECCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoudnessMeter.iOS", "LoudnessMeter.iOS\LoudnessMeter.iOS.csproj", "{AA8B0425-1E66-45A5-89EF-4CB16CB7E98F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoudnessMeter.Web", "LoudnessMeter.Web\LoudnessMeter.Web.csproj", "{F854B4F1-D511-4A1B-B3D9-1B8E811B9962}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D38083E8-189A-4A9E-B9AF-73D13E5E2717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D38083E8-189A-4A9E-B9AF-73D13E5E2717}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D38083E8-189A-4A9E-B9AF-73D13E5E2717}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D38083E8-189A-4A9E-B9AF-73D13E5E2717}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C75D9541-E057-41C3-B3ED-45AA8B7C5C5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C75D9541-E057-41C3-B3ED-45AA8B7C5C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C75D9541-E057-41C3-B3ED-45AA8B7C5C5C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C75D9541-E057-41C3-B3ED-45AA8B7C5C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C75D9541-E057-41C3-B3ED-45AA8B7C5C5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C75D9541-E057-41C3-B3ED-45AA8B7C5C5C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D5BCA9D3-21A1-4761-A29C-B20FB976ECCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5BCA9D3-21A1-4761-A29C-B20FB976ECCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5BCA9D3-21A1-4761-A29C-B20FB976ECCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5BCA9D3-21A1-4761-A29C-B20FB976ECCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA8B0425-1E66-45A5-89EF-4CB16CB7E98F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA8B0425-1E66-45A5-89EF-4CB16CB7E98F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA8B0425-1E66-45A5-89EF-4CB16CB7E98F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AA8B0425-1E66-45A5-89EF-4CB16CB7E98F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA8B0425-1E66-45A5-89EF-4CB16CB7E98F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA8B0425-1E66-45A5-89EF-4CB16CB7E98F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F854B4F1-D511-4A1B-B3D9-1B8E811B9962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F854B4F1-D511-4A1B-B3D9-1B8E811B9962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F854B4F1-D511-4A1B-B3D9-1B8E811B9962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F854B4F1-D511-4A1B-B3D9-1B8E811B9962}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E27EE839-EC3A-421C-BAE3-72A84984291C}
+	EndGlobalSection
+EndGlobal
