@@ -19,9 +19,9 @@
             <ControlTemplate>
                 <Border Padding="15, 7" Background="{TemplateBinding Background}">
                     <StackPanel>
-                        <Label HorizontalAlignment="Center" Padding="0"
+                        <Label Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" Padding="0"
                                FontSize="21" Content="{TemplateBinding LargeText}" />
-                        <Label HorizontalAlignment="Center" Padding="0"
+                        <Label Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" Padding="0"
                                FontSize="11" Content="{TemplateBinding SmallText}" />
                     </StackPanel>
                 </Border>
@@ -37,11 +37,11 @@
         <Setter Property="Template">
             <ControlTemplate>
               <StackPanel>
-                  <Label Padding="15, 7" CornerRadius="20" Background="{TemplateBinding Background}"
+                  <Label Foreground="{TemplateBinding Foreground}" Padding="15, 7" CornerRadius="20" Background="{TemplateBinding Background}"
                          HorizontalAlignment="Center" FontSize="21"
                          Content="{TemplateBinding LargeText}" />
 
-                  <Label HorizontalAlignment="Center" Padding="0" Margin="0,5, 0, 5"
+                  <Label Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" Padding="0" Margin="0,5, 0, 5"
                          FontSize="11" Content="{TemplateBinding SmallText}" />
               </StackPanel>
             </ControlTemplate>

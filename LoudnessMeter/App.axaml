@@ -8,7 +8,8 @@
 
     <Application.Styles>
         <FluentTheme Mode="Light" />
-        <StyleInclude Source="Styles/LargeLabelControl.axaml" />
+        <StyleInclude Source="/Styles/AppDefaultStyles.axaml" />
+        <StyleInclude Source="/Styles/LargeLabelControl.axaml" />
     </Application.Styles>
 
     <Application.Resources>
