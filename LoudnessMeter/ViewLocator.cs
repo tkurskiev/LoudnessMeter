@@ -25,7 +25,8 @@ namespace LoudnessMeter
 
         public bool Match(object? data)
         {
-            return data is ViewModelBase;
+            return false;
+            //return data is ViewModelBase;
         }
     }
 }
