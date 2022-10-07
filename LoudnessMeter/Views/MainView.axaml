@@ -4,13 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:LoudnessMeter.ViewModels"
              xmlns:controls="clr-namespace:LoudnessMeter"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1048" d:DesignHeight="645"
              x:Class="LoudnessMeter.Views.MainView"
              Foreground="White"
              Background="#171C2C">
-  <Design.DataContext>
-    <viewModels:MainViewModel />
-  </Design.DataContext>
+    <Design.DataContext>
+        <viewModels:MainViewModel />
+    </Design.DataContext>
 
     <UserControl.Styles>
         <Style Selector="Button.small">
@@ -21,171 +21,216 @@
             <Setter Property="Padding" Value="7, 2" />
         </Style>
         <Style Selector="Button:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{DynamicResource BrightBlueHoverBrush}"></Setter>
+            <Setter Property="Background" Value="{DynamicResource BrightBlueHoverBrush}" />
 
             <!-- Если в кнопку просто передать текст, то он конвертируется в 
                             TextBlock, который становится частью кнопки -->
-            <Setter Property="TextBlock.Foreground" Value="White"></Setter>
+            <Setter Property="TextBlock.Foreground" Value="White" />
+        </Style>
+
+		<!-- For Channel Configuration Popup -->
+		<Style Selector="Border.channel">
+            <Setter Property="Width" Value="0"></Setter>
+            <Setter Property="Height" Value="0"></Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Width" Duration="0:0:0.17" Easing="QuadraticEaseIn"></DoubleTransition>
+                    <DoubleTransition Property="Height" Duration="0:0:0.17" Easing="QuadraticEaseIn"></DoubleTransition>
+				</Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Border.channel.open">
+            <Setter Property="Width" Value="300"></Setter>
+            <Setter Property="Height" Value="600"></Setter>
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto, *, Auto">
-    <!-- Title bar -->
-    <Grid Grid.Row="0" Background="{DynamicResource MediumGreyBrush}" Height="60" ColumnDefinitions="Auto, Auto, *, Auto, Auto">
+	<!-- Main Grid -->
+    <Grid Name="MainGrid" RowDefinitions="Auto, *, Auto" Background="White">
 
-      <Grid.Styles>
-        <Style Selector="Button">
-          <Setter Property="Background" Value="Transparent"></Setter>
-          <Setter Property="Width" Value="45"></Setter>
-        </Style>
-        <Style Selector="Button Image">
-          <Setter Property="Width" Value="25"></Setter>
-        </Style>
-        <Style Selector="Button /template/ ContentPresenter">
-          <Setter Property="Transitions">
-            <Transitions>
-              <TransformOperationsTransition Property="RenderTransform"
-                                             Duration="0:0:0.2"/>
-            </Transitions>
-          </Setter>
-        </Style>
-        <Style Selector="Button:pointerover /template/ ContentPresenter">
-          <Setter Property="Background" Value="Transparent"></Setter>
-          <Setter Property="RenderTransform" Value="scale(1.11)"></Setter>
-          <Setter Property="Opacity" Value="0.6"></Setter>
-        </Style>
-      </Grid.Styles>
+        <!-- Channel Configuration Popup Closer -->
+        <Border Grid.Row="0" Grid.RowSpan="3"
+                IsVisible="{Binding ChannelConfigurationListIsOpen}"
+                PointerPressed="InputElement_OnPointerPressed"
+                Background="Transparent"
+                ZIndex="1" />
 
-      <Button Grid.Column="0">
-        <Image Source="/Assets/Images/Monitor.png" />
-        <!-- <Image Source="{SvgImage /Assets/Images/Monitor.png}"/> -->
-      </Button>
-      <Button Grid.Column="1">
-        <Image Source="/Assets/Images/Lock.png" />
-      </Button>
+        <!-- Channel Configuration Popup -->
+        <Border Grid.Row="0" Name="ChannelConfigurationPopup" 
+                Classes="channel"
+                Classes.open="{Binding ChannelConfigurationListIsOpen}"
+                Grid.RowSpan="3"
+                Background="Red" ZIndex="2"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="15,0,0,15">
+            <Label>Test</Label>
+        </Border>
 
-      <StackPanel Orientation="Horizontal"
-                  VerticalAlignment="Center" HorizontalAlignment="Center"
-                  Grid.Column="2">
-        <Label Content="{Binding BoldTitle}" FontSize="24" FontWeight="Black" />
-        <Label Content="{Binding RegularTitle}" FontSize="24" />
-      </StackPanel>
+        <!-- Title bar -->
+        <Grid Grid.Row="0" Background="{DynamicResource MediumGreyBrush}" Height="60"
+              ColumnDefinitions="Auto, Auto, *, Auto, Auto">
 
-      <Button Grid.Column="3">
-        <Image Source="/Assets/Images/Export.png" />
-      </Button>
-      <Button Grid.Column="4">
-        <Image Source="/Assets/Images/Cog.png" />
-      </Button>
-    </Grid>
+            <Grid.Styles>
+                <Style Selector="Button">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Width" Value="45" />
+                </Style>
+                <Style Selector="Button Image">
+                    <Setter Property="Width" Value="25" />
+                </Style>
+                <Style Selector="Button /template/ ContentPresenter">
+                    <Setter Property="Transitions">
+                        <Transitions>
+                            <TransformOperationsTransition Property="RenderTransform"
+                                                           Duration="0:0:0.2" />
+                        </Transitions>
+                    </Setter>
+                </Style>
+                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="RenderTransform" Value="scale(1.11)" />
+                    <Setter Property="Opacity" Value="0.6" />
+                </Style>
+            </Grid.Styles>
 
-    <!-- Main area -->
-    <Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, *" Background="{DynamicResource DarkBlueBrush}">
-      <!-- Volume bar -->
-      <Grid Grid.Column="0" Width="150" RowDefinitions="*, Auto, Auto"
-            Margin="0, 20">
+            <Button Grid.Column="0">
+                <Image Source="/Assets/Images/Monitor.png" />
+                <!-- <Image Source="{SvgImage /Assets/Images/Monitor.png}"/> -->
+            </Button>
+            <Button Grid.Column="1">
+                <Image Source="/Assets/Images/Lock.png" />
+            </Button>
 
-        <!-- Volume meter Gauge -->
-        <Grid Grid.Row="0"
-              Margin="10,0"
-              RowDefinitions="3*,3*,3*,9*,5*,4*,9*,9*,9*,6*,Auto"
-              ColumnDefinitions="Auto,*,Auto,Auto">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center" HorizontalAlignment="Center"
+                        Grid.Column="2">
+                <Label Content="{Binding BoldTitle}" FontSize="24" FontWeight="Black" />
+                <Label Content="{Binding RegularTitle}" FontSize="24" />
+            </StackPanel>
 
-          <Grid.Styles>
-            <Style Selector="Label">
-              <Setter Property="Foreground" Value="Wheat" />
-              <Setter Property="FontSize" Value="12" />
-              <Setter Property="HorizontalAlignment" Value="Right" />
-              <Setter Property="Padding" Value="0" />
-            </Style>
-          </Grid.Styles>
-
-          <Label Grid.Row="0" Grid.Column="0">0 —</Label>
-          <Label Grid.Row="1" Grid.Column="0">-3 —</Label>
-          <Label Grid.Row="2" Grid.Column="0">-6 —</Label>
-          <Label Grid.Row="3" Grid.Column="0">-9 —</Label>
-          <Label Grid.Row="4" Grid.Column="0">-18 —</Label>
-          <Label Grid.Row="5" Grid.Column="0">-23 —</Label>
-          <Label Grid.Row="6" Grid.Column="0">-27 —</Label>
-          <Label Grid.Row="7" Grid.Column="0">-36 —</Label>
-          <Label Grid.Row="8" Grid.Column="0">-45 —</Label>
-          <Label Grid.Row="9" Grid.Column="0">-54 —</Label>
-          <Label Grid.Row="10" Grid.Column="0" />
-
-          <!-- Volume Bar -->
-          <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" Width="20" RowDefinitions="23*,37*">
-            <Rectangle Grid.Row="0" Margin="0,8,0,-8" Fill="#b05c4e" Width="20" />
-            <Rectangle Grid.Row="1" Margin="0,8,0,0" Fill="White" Width="20" />
-          </Grid>
-
-          <Label Grid.Row="0" Grid.Column="2">—</Label>
-          <Label Grid.Row="1" Grid.Column="2">—</Label>
-          <Label Grid.Row="2" Grid.Column="2">—</Label>
-          <Label Grid.Row="3" Grid.Column="2">—</Label>
-          <Label Grid.Row="4" Grid.Column="2">—</Label>
-          <Label Grid.Row="5" Grid.Column="2">—</Label>
-          <Label Grid.Row="6" Grid.Column="2">—</Label>
-          <Label Grid.Row="7" Grid.Column="2">—</Label>
-          <Label Grid.Row="8" Grid.Column="2">—</Label>
-          <Label Grid.Row="9" Grid.Column="2">—</Label>
-          <Label Grid.Row="10" Grid.Column="2" />
-
-          <!-- Arrow -->
-          <Canvas Grid.Row="0" Grid.Column="3" Grid.RowSpan="11" Width="20">
-            <Rectangle Canvas.Top="0" Fill="White" Width="20" Height="20" />
-          </Canvas>
+            <Button Grid.Column="3">
+                <Image Source="/Assets/Images/Export.png" />
+            </Button>
+            <Button Grid.Column="4">
+                <Image Source="/Assets/Images/Cog.png" />
+            </Button>
         </Grid>
 
-        <!-- LUFS label-->
-        <Label Grid.Row="1" Foreground="White" FontSize="20"
-               HorizontalAlignment="Center" Margin="0, 5">
-          LUFS
-        </Label>
+        <!-- Main area -->
+        <Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, *" Background="{DynamicResource DarkBlueBrush}">
+            <!-- Volume bar -->
+            <Grid Grid.Column="0" Width="150" RowDefinitions="*, Auto, Auto"
+                  Margin="0, 20">
 
-        <!-- Volume Bar Bottom Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <!-- Volume meter Gauge -->
+                <Grid Grid.Row="0"
+                      Margin="10,0"
+                      RowDefinitions="3*,3*,3*,9*,5*,4*,9*,9*,9*,6*,Auto"
+                      ColumnDefinitions="Auto,*,Auto,Auto">
 
-          <Button Classes="small" CornerRadius="30" Width="30" Height="30"
-                  Padding="3"
-                  Margin="0,0,20,0">
-            <Image Margin="3, 0, 1,0" Source="/Assets/Images/DoubleArrow.png"></Image>
-          </Button>
-          <Button Classes="small">INT-LRA</Button>
-        </StackPanel>
-      </Grid>
-      <!-- Details panel -->
-      <StackPanel Grid.Column="1" Width="140" Margin="0, 15, 10, 15">
-        <controls:LargeLabelControl LargeText="-21.1 LUFS" SmallText="SHORT TERM"></controls:LargeLabelControl>
-        <controls:LargeLabelControl LargeText="-20.7 LUFS" SmallText="INTEGRATED" Background="{DynamicResource LightBlueBrush}"></controls:LargeLabelControl>
-        <controls:LargeLabelControl LargeText="9.5 LU" SmallText="LOUDNESS RANGE"></controls:LargeLabelControl>
-        <controls:LargeLabelControl LargeText="11.5 LU" SmallText="REALTIME DYNAMICS"></controls:LargeLabelControl>
-        <controls:LargeLabelControl LargeText="20.5 LU" SmallText="AVG. DYNAMIC (PLR)" Margin="0, 0, 0, 13"></controls:LargeLabelControl>
+                    <Grid.Styles>
+                        <Style Selector="Label">
+                            <Setter Property="Foreground" Value="Wheat" />
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                            <Setter Property="Padding" Value="0" />
+                        </Style>
+                    </Grid.Styles>
 
-        <controls:LargeLabelControl LargeText="-9.8 LUFS" SmallText="MOMENTARY MAX" Classes="button"></controls:LargeLabelControl>
-        <controls:LargeLabelControl LargeText="-15.1 LUFS" SmallText="SHORT TERM MAX" Classes="button"></controls:LargeLabelControl>
-        <controls:LargeLabelControl LargeText="0.7dB" SmallText="TRUE PEAK MAX" Classes="button" Margin="0, 0, 0, 5"></controls:LargeLabelControl>
+                    <Label Grid.Row="0" Grid.Column="0">0 —</Label>
+                    <Label Grid.Row="1" Grid.Column="0">-3 —</Label>
+                    <Label Grid.Row="2" Grid.Column="0">-6 —</Label>
+                    <Label Grid.Row="3" Grid.Column="0">-9 —</Label>
+                    <Label Grid.Row="4" Grid.Column="0">-18 —</Label>
+                    <Label Grid.Row="5" Grid.Column="0">-23 —</Label>
+                    <Label Grid.Row="6" Grid.Column="0">-27 —</Label>
+                    <Label Grid.Row="7" Grid.Column="0">-36 —</Label>
+                    <Label Grid.Row="8" Grid.Column="0">-45 —</Label>
+                    <Label Grid.Row="9" Grid.Column="0">-54 —</Label>
+                    <Label Grid.Row="10" Grid.Column="0" />
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-          <Button Classes="small" Margin="0,0,20,0">AUTO</Button>
+                    <!-- Volume Bar -->
+                    <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="11" Width="20" RowDefinitions="23*,37*">
+                        <Rectangle Grid.Row="0" Margin="0,8,0,-8" Fill="#b05c4e" Width="20" />
+                        <Rectangle Grid.Row="1" Margin="0,8,0,0" Fill="White" Width="20" />
+                    </Grid>
 
-          <Button Classes="small" FontSize="20" FontFamily="Arial"
-                  Background="{DynamicResource FadedRedBrush}">X</Button>
-        </StackPanel>
-      </StackPanel>
+                    <Label Grid.Row="0" Grid.Column="2">—</Label>
+                    <Label Grid.Row="1" Grid.Column="2">—</Label>
+                    <Label Grid.Row="2" Grid.Column="2">—</Label>
+                    <Label Grid.Row="3" Grid.Column="2">—</Label>
+                    <Label Grid.Row="4" Grid.Column="2">—</Label>
+                    <Label Grid.Row="5" Grid.Column="2">—</Label>
+                    <Label Grid.Row="6" Grid.Column="2">—</Label>
+                    <Label Grid.Row="7" Grid.Column="2">—</Label>
+                    <Label Grid.Row="8" Grid.Column="2">—</Label>
+                    <Label Grid.Row="9" Grid.Column="2">—</Label>
+                    <Label Grid.Row="10" Grid.Column="2" />
 
-      <!-- Graph -->
-      <Rectangle Grid.Column="2" Fill="Black" />
-    </Grid>
+                    <!-- Arrow -->
+                    <Canvas Grid.Row="0" Grid.Column="3" Grid.RowSpan="11" Width="20">
+                        <Rectangle Canvas.Top="0" Fill="White" Width="20" Height="20" />
+                    </Canvas>
+                </Grid>
+
+                <!-- LUFS label-->
+                <Label Grid.Row="1" Foreground="White" FontSize="20"
+                       HorizontalAlignment="Center" Margin="0, 5">
+                    LUFS
+                </Label>
+
+                <!-- Volume Bar Bottom Buttons -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+
+                    <Button Classes="small" CornerRadius="30" Width="30" Height="30"
+                            Padding="3"
+                            Margin="0,0,20,0">
+                        <Image Margin="3, 0, 1,0" Source="/Assets/Images/DoubleArrow.png" />
+                    </Button>
+                    <Button Classes="small">INT-LRA</Button>
+                </StackPanel>
+            </Grid>
+            <!-- Details panel -->
+            <StackPanel Grid.Column="1" Width="140" Margin="0, 15, 10, 15">
+                <controls:LargeLabelControl LargeText="-21.1 LUFS" SmallText="SHORT TERM" />
+                <controls:LargeLabelControl LargeText="-20.7 LUFS" SmallText="INTEGRATED"
+                                            Background="{DynamicResource LightBlueBrush}" />
+                <controls:LargeLabelControl LargeText="9.5 LU" SmallText="LOUDNESS RANGE" />
+                <controls:LargeLabelControl LargeText="11.5 LU" SmallText="REALTIME DYNAMICS" />
+                <controls:LargeLabelControl LargeText="20.5 LU" SmallText="AVG. DYNAMIC (PLR)" Margin="0, 0, 0, 13" />
+
+                <controls:LargeLabelControl LargeText="-9.8 LUFS" SmallText="MOMENTARY MAX" Classes="button" />
+                <controls:LargeLabelControl LargeText="-15.1 LUFS" SmallText="SHORT TERM MAX" Classes="button" />
+                <controls:LargeLabelControl LargeText="0.7dB" SmallText="TRUE PEAK MAX" Classes="button"
+                                            Margin="0, 0, 0, 5" />
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Classes="small" Margin="0,0,20,0">AUTO</Button>
+
+                    <Button Classes="small" FontSize="20" FontFamily="Arial"
+                            Background="{DynamicResource FadedRedBrush}">
+                        X
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Graph -->
+            <Rectangle Grid.Column="2" Fill="Black" />
+        </Grid>
 
         <!-- Bottom bar -->
         <Grid Grid.Row="2" Margin="8" ShowGridLines="True"
               ColumnDefinitions="Auto, Auto, *, Auto, Auto, Auto, Auto, Auto">
-          <Button Grid.Column="0" Margin="0 0 8 0">Stereo</Button>
-          <Button Grid.Column="1">Youtube</Button>
-          <Button Grid.Column="3" Margin="0 0 8 0">10 SEC</Button>
-          <Button Grid.Column="4" Margin="0 0 8 0">CONTINUOUS</Button>
-          <Rectangle Grid.Column="5" Fill="Orange" Width="30" Margin="0 0 8 0" />
-          <Rectangle Grid.Column="6" Fill="Red" Width="30" />
+            <Button Grid.Column="0"
+                    Name="ChannelConfigurationButton"
+                    Command="{Binding ChannelConfigurationButtonPressedCommand}"
+                    Margin="0 0 8 0">Stereo</Button>
+
+            <Button Grid.Column="1">Youtube</Button>
+            <Button Grid.Column="3" Margin="0 0 8 0">10 SEC</Button>
+            <Button Grid.Column="4" Margin="0 0 8 0">CONTINUOUS</Button>
+            <Rectangle Grid.Column="5" Fill="Orange" Width="30" Margin="0 0 8 0" />
+            <Rectangle Grid.Column="6" Fill="Red" Width="30" />
         </Grid>
     </Grid>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
 
 namespace LoudnessMeter.ViewModels
 {
@@ -10,5 +11,11 @@ namespace LoudnessMeter.ViewModels
 
         [ObservableProperty]
         private string regularTitle = "LOUDNESS METER";
+
+        [ObservableProperty]
+        private bool channelConfigurationListIsOpen = false;
+
+        [RelayCommand]
+        private void ChannelConfigurationButtonPressed() => ChannelConfigurationListIsOpen ^= true;
     }
 }
