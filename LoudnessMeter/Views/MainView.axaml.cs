@@ -43,6 +43,6 @@ namespace LoudnessMeter.Views
         }
 
         private void InputElement_OnPointerPressed(object sender, PointerPressedEventArgs e) =>
-            ((MainViewModel)DataContext).ChannelConfigurationButtonPressedCommand.Execute(null);
+            ((MainViewModel?)DataContext)?.ChannelConfigurationButtonPressedCommand.Execute(null);
     }
 }

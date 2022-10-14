@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 
 namespace LoudnessMeter.ViewModels

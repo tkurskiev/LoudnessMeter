@@ -8,11 +8,14 @@
              x:Class="LoudnessMeter.Views.MainView"
              Foreground="White"
              Background="#171C2C">
+
+
     <Design.DataContext>
         <viewModels:MainViewModel />
     </Design.DataContext>
 
     <UserControl.Styles>
+
         <Style Selector="Button.small">
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="White" />
@@ -226,7 +229,7 @@
                     Command="{Binding ChannelConfigurationButtonPressedCommand}"
                     Margin="0 0 8 0">Stereo</Button>
 
-            <Button Grid.Column="1">Youtube</Button>
+            <Button Grid.Column="1" Content="YouTube" />
             <Button Grid.Column="3" Margin="0 0 8 0">10 SEC</Button>
             <Button Grid.Column="4" Margin="0 0 8 0">CONTINUOUS</Button>
             <Rectangle Grid.Column="5" Fill="Orange" Width="30" Margin="0 0 8 0" />
