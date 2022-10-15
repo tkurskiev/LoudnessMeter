@@ -10,6 +10,7 @@
         <FluentTheme Mode="Light" />
         <StyleInclude Source="/Styles/AppDefaultStyles.axaml" />
         <StyleInclude Source="/Styles/LargeLabelControl.axaml" />
+        <StyleInclude Source="/Styles/AnimatedPopup.axaml" />
     </Application.Styles>
 
     <Application.Resources>
