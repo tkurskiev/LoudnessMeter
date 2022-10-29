@@ -36,16 +36,13 @@
 	<!-- Main Grid -->
     <Grid Name="MainGrid" RowDefinitions="Auto, *, Auto" Background="White">
 
-        <!-- Channel Configuration Popup Closer -->
-        <Border Grid.Row="0" Grid.RowSpan="3"
-                IsVisible="{Binding ChannelConfigurationListIsOpen}"
-                PointerPressed="InputElement_OnPointerPressed"
-                Background="Transparent"
-                ZIndex="1" />
-
         <!-- Channel Configuration Popup -->
-        <controls:AnimatedPopup Grid.Row="0" Name="ChannelConfigurationPopup"
-                Grid.RowSpan="3" Margin="15,0,0,15">
+        <controls:AnimatedPopup 
+			Grid.Row="0"
+			Grid.RowSpan="3"
+			AnimationTime="0.3"
+			Name="ChannelConfigurationPopup"
+                 Margin="15,0,0,15">
            <Border Padding="20" Background="White" BorderThickness="1" CornerRadius="5">
                <StackPanel Orientation="Vertical">
                    <Label Content="Hello World!" />

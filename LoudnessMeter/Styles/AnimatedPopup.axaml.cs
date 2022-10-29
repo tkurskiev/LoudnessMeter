@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -13,6 +14,11 @@ namespace LoudnessMeter
     public partial class AnimatedPopup : ContentControl
     {
         #region Private members
+
+        /// <summary>
+        /// The underlay control for closing this popup
+        /// </summary>
+        private Control _underlayControl;
 
         /// <summary>
         /// Indicates if this is the first time we are animating
@@ -71,6 +77,11 @@ namespace LoudnessMeter
 
         #region Public Properties
 
+        /// <summary>
+        /// Indicates if the control is currently opened
+        /// </summary>
+        public bool IsOpened => _animationCurrentTick >= TotalTicks;
+
         #region Open
 
         private bool _open;
@@ -85,15 +96,31 @@ namespace LoudnessMeter
         public bool Open
         {
             get => _open;
-            set => SetAndRaise(OpenProperty, ref _open, value);
+            set
+            {
+                // If we are opening...
+                if(value)
+                {
+                    // If the parent is a grid...
+                    if (Parent is Grid grid)
+                    {
+                        // Set grid row/column span
+                        if (grid.RowDefinitions?.Count > 0)
+                            _underlayControl.SetValue(Grid.RowSpanProperty, grid.RowDefinitions?.Count);
+
+                        if (grid.ColumnDefinitions?.Count > 0)
+                            _underlayControl.SetValue(Grid.ColumnSpanProperty, grid.ColumnDefinitions?.Count);
+
+                        // Insert the underlay control
+                        grid.Children.Insert(0, _underlayControl);
+                    }
+                }
+
+                SetAndRaise(OpenProperty, ref _open, value);
+            }
         }
 
         #endregion
-
-        /// <summary>
-        /// Indicates if the control is currently opened
-        /// </summary>
-        public bool IsOpened => _animationCurrentTick >= TotalTicks;
 
         #region Animation Time
 
@@ -112,9 +139,24 @@ namespace LoudnessMeter
 
         #endregion
 
+        #region Underlay Opacity
+
+        private double _underlayOpacity = 0.2;
+
+        public static readonly DirectProperty<AnimatedPopup, double> UnderlayOpacityProperty = AvaloniaProperty.RegisterDirect<AnimatedPopup, double>(
+            "UnderlayOpacity", o => o.UnderlayOpacity, (o, v) => o.UnderlayOpacity = v);
+
+        public double UnderlayOpacity
+        {
+            get => _underlayOpacity;
+            set => SetAndRaise(UnderlayOpacityProperty, ref _underlayOpacity, value);
+        }
+
         #endregion
 
-        #region Public Commaneds
+        #endregion
+
+        #region Public Commands
 
         [RelayCommand]
         public void BeginOpen()
@@ -143,6 +185,20 @@ namespace LoudnessMeter
         /// </summary>
         public AnimatedPopup()
         {
+            // Make a new underlay control
+            _underlayControl = new Border
+            {
+                Background = Brushes.Black,
+                Opacity = 0,
+                ZIndex = 9
+            };
+
+            // On press, close popup
+            _underlayControl.PointerPressed += (sender, args) =>
+            {
+                BeginClose();
+            };
+
             // Set to invisible
             //Opacity = 0;
 
@@ -198,6 +254,41 @@ namespace LoudnessMeter
         }
 
         /// <summary>
+        /// Should be called when an open or close transition has complete
+        /// </summary>
+        private void AnimationComplete()
+        {
+            // If opened...
+            if(_open)
+            {
+                // Set size to desired size...
+                Width = _desiredSize.Width;
+                Height = _desiredSize.Height;
+            }
+            // If closed...
+            else
+            {
+                // Set size to 0...
+                Width = 0;
+                Height = 0;
+
+                // If the parent is a grid...
+                if(Parent is Grid grid)
+                {
+                    // Reset opacity
+                    _underlayControl.Opacity = 0;
+
+                    if (grid.Children.Contains(_underlayControl))
+                        // Remove the underlay
+                        grid.Children.Remove(_underlayControl);
+                }
+            }
+
+            Width = _open ? _desiredSize.Width : 0;
+            Height = _open ? _desiredSize.Height : 0;
+        }
+
+        /// <summary>
         /// Update control's sizes based on the next tick of an animation
         /// </summary>
         private void AnimationTick()
@@ -208,8 +299,16 @@ namespace LoudnessMeter
                 // Clear the flag
                 _isFirstAnimation = false;
 
+                // Stop this animation timer
+                _animationTimer.Stop();
+
                 // Reset opacity
                 Opacity = _originalOpacity;
+
+                // Set the final size (final percentage can add up to less than 100%, it could be 99.97%,
+                // because of how we are calculating the easing and the percentage)
+                // Bypass all animation and set size
+                AnimationComplete();
 
                 // Done on this tick
                 return;
@@ -225,8 +324,7 @@ namespace LoudnessMeter
                 // Set the final size (final percentage can add up to less than 100%, it could be 99.97%,
                 // because of how we are calculating the easing and the percentage)
                 // Bypass all animation and set size
-                Width = _open ? _desiredSize.Width : 0;
-                Height = _open ? _desiredSize.Height : 0;
+                AnimationComplete();
 
                 // Clear animating flag
                 _animating = false;
@@ -248,7 +346,6 @@ namespace LoudnessMeter
             // Make an animation easing
             var easing = new QuadraticEaseIn();
 
-
             // Calculate final width and height
             var finalWidth = _desiredSize.Width * easing.Ease(percentageAnimated);
             var finalHeight = _desiredSize.Height * easing.Ease(percentageAnimated);
@@ -256,8 +353,13 @@ namespace LoudnessMeter
             // Do our animation
             Width = finalWidth;
             Height = finalHeight;
+            Debug.WriteLine($"Current popup width: {Width}, height: {Height}");
 
-            Debug.WriteLine($"Current tick: {_animationCurrentTick}");
+            // Animate underlay
+            _underlayControl.Opacity = _underlayOpacity * easing.Ease(percentageAnimated);
+            Debug.WriteLine($"Current underlay opacity: {_underlayControl.Opacity}");
+
+            Debug.WriteLine($"\nCurrent tick: {_animationCurrentTick}");
         }
 
         #endregion
