@@ -40,17 +40,23 @@
         <controls:AnimatedPopup 
 			Grid.Row="0"
 			Grid.RowSpan="3"
-			AnimationTime="0.3"
+			AnimationTime="0:0:0.3"
 			Name="ChannelConfigurationPopup"
                  Margin="15,0,0,15">
            <Border Padding="20" Background="White" BorderThickness="1" CornerRadius="5">
-               <StackPanel Orientation="Vertical">
-                   <Label Content="Hello World!" />
-                   <Label Content="Hello World!" />
-				   <Label Content="Hello World!" />
-				   <Label Content="Hello World!" />
-                   <Label Content="Hello World!" />
-			   </StackPanel>
+			   <Expander>
+				   <Expander.Header>
+					   <Label Content="This is a long header text"/>
+				   </Expander.Header>
+				   
+				   <StackPanel Orientation="Vertical">
+					   <Label Content="Hello World!" />
+					   <Label Content="Hello World!" />
+					   <Label Content="Hello World!" />
+					   <Label Content="Hello World!" />
+					   <Label Content="Hello World!" />
+				   </StackPanel>
+			   </Expander>
            </Border>
         </controls:AnimatedPopup>
 

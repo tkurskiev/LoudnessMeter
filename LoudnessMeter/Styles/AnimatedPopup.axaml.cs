@@ -101,6 +101,11 @@ namespace LoudnessMeter
                 // If we are opening...
                 if(value)
                 {
+                    // If the value hasn't changed...
+                    if(value == _open)
+                        // Do nothing...
+                        return;
+
                     // If the parent is a grid...
                     if (Parent is Grid grid)
                     {
@@ -112,8 +117,17 @@ namespace LoudnessMeter
                             _underlayControl.SetValue(Grid.ColumnSpanProperty, grid.ColumnDefinitions?.Count);
 
                         // Insert the underlay control
-                        grid.Children.Insert(0, _underlayControl);
+                        if(!grid.Children.Contains(_underlayControl))
+                            grid.Children.Insert(0, _underlayControl);
                     }
+                }
+                // If closing...
+                else
+                {
+                    // If the control is currently fully open...
+                    if(IsOpened)
+                        // Update the desired size
+                        UpdateDesiredSize();
                 }
 
                 SetAndRaise(OpenProperty, ref _open, value);
@@ -144,12 +158,27 @@ namespace LoudnessMeter
         private double _underlayOpacity = 0.2;
 
         public static readonly DirectProperty<AnimatedPopup, double> UnderlayOpacityProperty = AvaloniaProperty.RegisterDirect<AnimatedPopup, double>(
-            "UnderlayOpacity", o => o.UnderlayOpacity, (o, v) => o.UnderlayOpacity = v);
+            nameof(UnderlayOpacity), o => o.UnderlayOpacity, (o, v) => o.UnderlayOpacity = v);
 
         public double UnderlayOpacity
         {
             get => _underlayOpacity;
             set => SetAndRaise(UnderlayOpacityProperty, ref _underlayOpacity, value);
+        }
+
+        #endregion
+
+        #region Animation Opacity
+
+        private bool _animateOpacity = true;
+
+        public static readonly DirectProperty<AnimatedPopup, bool> AnimateOpacityProperty = AvaloniaProperty.RegisterDirect<AnimatedPopup, bool>(
+            nameof(AnimateOpacity), o => o.AnimateOpacity, (o, v) => o.AnimateOpacity = v);
+
+        public bool AnimateOpacity
+        {
+            get => _animateOpacity;
+            set => SetAndRaise(AnimateOpacityProperty, ref _animateOpacity, value);
         }
 
         #endregion
@@ -224,8 +253,8 @@ namespace LoudnessMeter
                 // DesiredSize is a UI-threaded property, and _sizingTimer is a generic-threaded timer
                 Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    // Set the desired size
-                    _desiredSize = DesiredSize - Margin;
+                    // Update the desired size
+                    UpdateDesiredSize();
 
                     // Update Animation
                     UpdateAnimation();
@@ -239,6 +268,15 @@ namespace LoudnessMeter
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Updates the animation desired size based on the current visuals desired size
+        /// </summary>
+        private void UpdateDesiredSize()
+        {
+            // Set desired size
+            _desiredSize = DesiredSize - Margin;
+        }
 
         /// <summary>
         /// Calculate and start any new required animations
@@ -262,8 +300,11 @@ namespace LoudnessMeter
             if(_open)
             {
                 // Set size to desired size...
-                Width = _desiredSize.Width;
-                Height = _desiredSize.Height;
+                Width = double.NaN;
+                Height = double.NaN;
+
+                // Make sure opacity is set to original value
+                Opacity = _originalOpacity;
             }
             // If closed...
             else
@@ -283,9 +324,6 @@ namespace LoudnessMeter
                         grid.Children.Remove(_underlayControl);
                 }
             }
-
-            Width = _open ? _desiredSize.Width : 0;
-            Height = _open ? _desiredSize.Height : 0;
         }
 
         /// <summary>
@@ -336,7 +374,6 @@ namespace LoudnessMeter
             // Set animating flag
             _animating = true;
 
-            // TODO: 012. Avalonia UI - Direct Properties On Control - 37:14
             // Move the tick in the right direction
             _animationCurrentTick += _open ? 1 : -1;
 
@@ -354,6 +391,10 @@ namespace LoudnessMeter
             Width = finalWidth;
             Height = finalHeight;
             Debug.WriteLine($"Current popup width: {Width}, height: {Height}");
+
+            // Animate opacity
+            if(AnimateOpacity)
+                Opacity = _originalOpacity * easing.Ease(percentageAnimated);
 
             // Animate underlay
             _underlayControl.Opacity = _underlayOpacity * easing.Ease(percentageAnimated);
