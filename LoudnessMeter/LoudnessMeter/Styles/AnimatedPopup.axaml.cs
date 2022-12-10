@@ -130,7 +130,11 @@ namespace LoudnessMeter
                         // Update the desired size
                         UpdateDesiredSize();
                 }
+                
+                // Update Animation
+                UpdateAnimation();
 
+                // Raise the property changed event
                 SetAndRaise(OpenProperty, ref _open, value);
             }
         }
@@ -192,18 +196,12 @@ namespace LoudnessMeter
         public void BeginOpen()
         {
             Open = true;
-
-            // Update Animation
-            UpdateAnimation();
         }
 
         [RelayCommand]
         public void BeginClose()
         {
             Open = false;
-
-            // Update Animation
-            UpdateAnimation();
         }
 
         #endregion

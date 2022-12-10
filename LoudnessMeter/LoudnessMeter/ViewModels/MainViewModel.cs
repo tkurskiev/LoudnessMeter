@@ -50,7 +50,7 @@ namespace LoudnessMeter.ViewModels
             SelectedChannelConfiguration = item;
 
             // Close the menu
-            ChannelConfigurationListIsOpen = false;
+            ChannelConfigurationListIsOpen ^= true;
         }
 
         #endregion

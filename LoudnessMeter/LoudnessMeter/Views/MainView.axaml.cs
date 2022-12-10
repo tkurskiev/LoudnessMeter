@@ -6,6 +6,7 @@ using LoudnessMeter.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 
 namespace LoudnessMeter.Views
 {
@@ -44,14 +45,13 @@ namespace LoudnessMeter.Views
         {
             base.Render(context);
 
-            // Get relative position of button, in relation to main grid
-            var position = _channelConfigButton.TranslatePoint(new Point(), _mainGrid) ??
-                           throw new Exception("Cannot get TranslatePoint from Configuration Button");
-
-            // Also from Luke's answer... (my bicycle)
-            Task.Factory.StartNew(async () =>
+            // Render can stuck in a loop infinitely if we change UI element on the UI thread, because this change requires another
+            // render call, which leads to another render call, etc...
+            Dispatcher.UIThread.InvokeAsync(() =>
             {
-                await Task.Delay(10);
+                // Get relative position of button, in relation to main grid
+                var position = _channelConfigButton.TranslatePoint(new Point(), _mainGrid) ??
+                               throw new Exception("Cannot get TranslatePoint from Configuration Button");
 
                 // Set margin on popup, so it appears bottom left of button
                 _channelConfigPopup.Margin = new Thickness(

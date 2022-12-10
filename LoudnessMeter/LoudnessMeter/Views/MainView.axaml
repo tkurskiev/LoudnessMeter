@@ -40,21 +40,33 @@
 			Grid.RowSpan="3"
 			AnimationTime="0:0:0.3"
 			Name="ChannelConfigurationPopup"
+			Open="{Binding ChannelConfigurationListIsOpen, Mode=TwoWay}"
                  Margin="15,0,0,15">
-			<Border Padding="20" Background="White" BorderThickness="1" CornerRadius="5">
-				<Expander>
-					<Expander.Header>
-						<Label Content="This is a long header text"/>
-					</Expander.Header>
+			<Border Padding="20" Background="White" BorderThickness="1" BorderBrush="#ddd" CornerRadius="5">
 
-					<StackPanel Orientation="Vertical">
-						<Label Content="Hello World!" />
-						<Label Content="Hello World!" />
-						<Label Content="Hello World!" />
-						<Label Content="Hello World!" />
-						<Label Content="Hello World!" />
-					</StackPanel>
-				</Expander>
+				<ItemsControl Items="{Binding ChannelConfigurations}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Expander>
+								<Expander.Header>
+									<Label Content="{Binding Key}"/>
+								</Expander.Header>
+
+								<ItemsControl Items="{Binding Items}">
+									<ItemsControl.ItemTemplate>
+										<DataTemplate>
+											<Button 
+												Content="{Binding LongText}"
+												Command="{Binding $parent[controls:AnimatedPopup].DataContext.ChannelConfigurationItemPressedCommand}"
+												CommandParameter="{Binding }"/>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</Expander>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+				
 			</Border>
 		</controls:AnimatedPopup>
 
@@ -98,6 +110,7 @@
                         Grid.Column="2">
 				<Label Content="{Binding BoldTitle}" FontSize="24" FontWeight="Black" />
 				<Label Content="{Binding RegularTitle}" FontSize="24" />
+				<Label Content="{Binding ChannelConfigurationListIsOpen}" FontSize="24" />
 			</StackPanel>
 
 			<Button Grid.Column="3">
@@ -217,7 +230,7 @@
                     Name="ChannelConfigurationButton"
 					Content="{Binding ChannelConfigurationButtonText}"
                     Command="{Binding #ChannelConfigurationPopup.BeginOpen}"
-                    Margin="0 0 8 0">Stereo</Button>
+                    Margin="0 0 8 0" />
 
 			<Button Grid.Column="1" Content="YouTube" />
 			<Button Grid.Column="3" Margin="0 0 8 0">10 SEC</Button>
