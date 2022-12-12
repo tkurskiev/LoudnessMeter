@@ -25,7 +25,7 @@ namespace LoudnessMeter.ViewModels
         private string _regularTitle = "LOUDNESS METER";
 
         [ObservableProperty]
-        private bool _channelConfigurationListIsOpen = false;
+        private bool _channelConfigurationListIsOpen = true;
 
         [ObservableProperty]
         private ObservableGroupedCollection<string, ChannelConfigurationItem>? _channelConfigurations = default;

@@ -44,10 +44,50 @@
                  Margin="15,0,0,15">
 			<Border Padding="20" Background="White" BorderThickness="1" BorderBrush="#ddd" CornerRadius="5">
 
+				<Border.Resources>
+					<ControlTheme x:Key="SmallExpander" TargetType="Expander">
+					    <Setter Property="ContentTransition">
+					      <Setter.Value>
+					        <CrossFade Duration="00:00:00.25" />
+					      </Setter.Value>
+					    </Setter>
+					    <Setter Property="Template">
+					        <ControlTemplate>
+					          <Border Background="{TemplateBinding Background}"
+					                  BorderBrush="{TemplateBinding BorderBrush}"
+					                  BorderThickness="{TemplateBinding BorderThickness}"
+					                  CornerRadius="{TemplateBinding CornerRadius}">
+					            <Grid RowDefinitions="Auto,*">
+					              <ToggleButton Name="PART_toggle"
+					                            Grid.Row="0"
+					                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+					                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+					                            Content="{TemplateBinding Header}"
+					                            IsChecked="{TemplateBinding IsExpanded,
+					                                                        Mode=TwoWay}"
+					                            Theme="{StaticResource SimpleExpanderToggleButtonRightTheme}" />
+					              <ContentPresenter Name="PART_ContentPresenter"
+					                                Grid.Row="1"
+					                                Padding="{TemplateBinding Padding}"
+					                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+					                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+					                                Content="{TemplateBinding Content}"
+					                                ContentTemplate="{TemplateBinding ContentTemplate}"
+					                                IsVisible="{TemplateBinding IsExpanded}" />
+					            </Grid>
+					          </Border>
+					        </ControlTemplate>
+					      </Setter>
+					    <Style Selector="^:expanded /template/ ToggleButton#PART_toggle">
+					        <Setter Property="Theme" Value="{StaticResource SimpleExpanderToggleButtonDownTheme}" />
+					      </Style>
+					</ControlTheme>
+				</Border.Resources>
+				
 				<ItemsControl Items="{Binding ChannelConfigurations}">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<Expander>
+							<Expander IsExpanded="True">
 								<Expander.Header>
 									<Label Content="{Binding Key}"/>
 								</Expander.Header>
@@ -57,7 +97,7 @@
 										<DataTemplate>
 											<Button 
 												Content="{Binding LongText}"
-												Command="{Binding $parent[controls:AnimatedPopup].DataContext.ChannelConfigurationItemPressedCommand}"
+												Command="{Binding $parent[controls:AnimatedPopup].((viewModels:MainViewModel)DataContext).ChannelConfigurationItemPressedCommand}"
 												CommandParameter="{Binding }"/>
 										</DataTemplate>
 									</ItemsControl.ItemTemplate>

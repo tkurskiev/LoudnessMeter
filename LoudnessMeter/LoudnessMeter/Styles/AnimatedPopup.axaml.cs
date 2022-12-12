@@ -110,16 +110,19 @@ namespace LoudnessMeter
                     // If the parent is a grid...
                     if (Parent is Grid grid)
                     {
-                        // Set grid row/column span
-                        if (grid.RowDefinitions?.Count > 0)
-                            _underlayControl.SetValue(Grid.RowSpanProperty, grid.RowDefinitions?.Count);
+                        Dispatcher.UIThread.InvokeAsync(() =>
+                        {
+                            // Set grid row/column span
+                            if (grid.RowDefinitions?.Count > 0)
+                                _underlayControl.SetValue(Grid.RowSpanProperty, grid.RowDefinitions?.Count);
 
-                        if (grid.ColumnDefinitions?.Count > 0)
-                            _underlayControl.SetValue(Grid.ColumnSpanProperty, grid.ColumnDefinitions?.Count);
+                            if (grid.ColumnDefinitions?.Count > 0)
+                                _underlayControl.SetValue(Grid.ColumnSpanProperty, grid.ColumnDefinitions?.Count);
 
-                        // Insert the underlay control
-                        if(!grid.Children.Contains(_underlayControl))
-                            grid.Children.Insert(0, _underlayControl);
+                            // Insert the underlay control
+                            if(!grid.Children.Contains(_underlayControl))
+                                grid.Children.Insert(0, _underlayControl);
+                        });
                     }
                 }
                 // If closing...
@@ -315,12 +318,15 @@ namespace LoudnessMeter
                 // If the parent is a grid...
                 if(Parent is Grid grid)
                 {
-                    // Reset opacity
-                    _underlayControl.Opacity = 0;
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        // Reset opacity
+                        _underlayControl.Opacity = 0;
 
-                    if (grid.Children.Contains(_underlayControl))
-                        // Remove the underlay
-                        grid.Children.Remove(_underlayControl);
+                        if (grid.Children.Contains(_underlayControl))
+                            // Remove the underlay
+                            grid.Children.Remove(_underlayControl);
+                    });
                 }
             }
         }
