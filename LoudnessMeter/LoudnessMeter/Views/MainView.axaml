@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:LoudnessMeter.ViewModels"
 			 xmlns:controls="clr-namespace:LoudnessMeter"
+             xmlns:dataModels="clr-namespace:LoudnessMeter.DataModels"
+             xmlns:valueConverters="clr-namespace:LoudnessMeter.ValueConverters"
              mc:Ignorable="d" d:DesignWidth="1048" d:DesignHeight="645"
              x:Class="LoudnessMeter.Views.MainView"
              Foreground="White"
@@ -12,6 +14,10 @@
 		<viewModels:MainViewModel />
 	</Design.DataContext>
 
+	<UserControl.Resources>
+		<valueConverters:CheckedToRotationConverter x:Key="CheckedToRotationConverter"></valueConverters:CheckedToRotationConverter>
+	</UserControl.Resources>
+	
 	<UserControl.Styles>
 
 		<Style Selector="Button.small">
@@ -42,7 +48,7 @@
 			Name="ChannelConfigurationPopup"
 			Open="{Binding ChannelConfigurationListIsOpen, Mode=TwoWay}"
                  Margin="15,0,0,15">
-			<Border Padding="20" Background="White" BorderThickness="1" BorderBrush="#ddd" CornerRadius="5">
+			<Border Padding="0" Background="White" BorderThickness="1" BorderBrush="#ddd" CornerRadius="5">
 
 				<Border.Resources>
 					<ControlTheme x:Key="SmallExpander" TargetType="Expander">
@@ -60,12 +66,37 @@
 					            <Grid RowDefinitions="Auto,*">
 					              <ToggleButton Name="PART_toggle"
 					                            Grid.Row="0"
+					                            Padding="0"
 					                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
 					                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
 					                            Content="{TemplateBinding Header}"
-					                            IsChecked="{TemplateBinding IsExpanded,
-					                                                        Mode=TwoWay}"
-					                            Theme="{StaticResource SimpleExpanderToggleButtonRightTheme}" />
+					                            IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
+					                            Background="Transparent">
+						              <ToggleButton.Template>
+							              <ControlTemplate>
+								              <Border Background="{TemplateBinding Background}"
+								                      BorderThickness="1">
+									              <StackPanel>
+										              <Grid ColumnDefinitions="*, Auto">
+											              <ContentControl Grid.Column="0" Content="{TemplateBinding Content}" />
+											              <Border Grid.Column="1"
+											                      Padding="8"
+											                      RenderTransform="{TemplateBinding IsChecked, Converter={StaticResource CheckedToRotationConverter}}"
+											                      HorizontalAlignment="Center"
+											                      VerticalAlignment="Center">
+												              <Path HorizontalAlignment="Center"
+												                    VerticalAlignment="Center"
+												                    Data="M 6 0 L 0 6 L 6 12"
+												                    Stroke="#bbb"
+												                    StrokeThickness="2" />
+											              </Border>
+										              </Grid>
+										              <Rectangle Fill="#999" Height="1" Margin="7 0"></Rectangle>
+									              </StackPanel>
+								              </Border>
+							              </ControlTemplate>
+						              </ToggleButton.Template>
+					              </ToggleButton>
 					              <ContentPresenter Name="PART_ContentPresenter"
 					                                Grid.Row="1"
 					                                Padding="{TemplateBinding Padding}"
@@ -78,24 +109,31 @@
 					          </Border>
 					        </ControlTemplate>
 					      </Setter>
-					    <Style Selector="^:expanded /template/ ToggleButton#PART_toggle">
-					        <Setter Property="Theme" Value="{StaticResource SimpleExpanderToggleButtonDownTheme}" />
-					      </Style>
 					</ControlTheme>
 				</Border.Resources>
 				
-				<ItemsControl Items="{Binding ChannelConfigurations}">
+				<Border.Styles>
+					<Style Selector="Expander.small">
+						<Setter Property="Theme" Value="{StaticResource SmallExpander}"></Setter>
+					</Style>
+				</Border.Styles>
+				
+				<ItemsControl 
+					Items="{Binding ChannelConfigurations}"
+					Margin="0 0 0 -2">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<Expander IsExpanded="True">
+							<Expander IsExpanded="True" Classes="small">
 								<Expander.Header>
-									<Label Content="{Binding Key}"/>
+									<Label FontSize="" Content="{Binding Key}"/>
 								</Expander.Header>
 
 								<ItemsControl Items="{Binding Items}">
 									<ItemsControl.ItemTemplate>
 										<DataTemplate>
 											<Button 
+												HorizontalAlignment="Stretch"
+												Background="White"
 												Content="{Binding LongText}"
 												Command="{Binding $parent[controls:AnimatedPopup].((viewModels:MainViewModel)DataContext).ChannelConfigurationItemPressedCommand}"
 												CommandParameter="{Binding }"/>

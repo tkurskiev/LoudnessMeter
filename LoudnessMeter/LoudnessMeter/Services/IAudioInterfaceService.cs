@@ -1,4 +1,4 @@
-﻿using LoudnessMeter.DataModel;
+﻿using LoudnessMeter.DataModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

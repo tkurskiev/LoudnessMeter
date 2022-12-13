@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LoudnessMeter.DataModel;
+using LoudnessMeter.DataModels;
 using LoudnessMeter.Services;
 using System.Linq;
 using System.Threading.Tasks;

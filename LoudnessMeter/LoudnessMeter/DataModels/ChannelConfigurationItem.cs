@@ -1,4 +1,4 @@
-﻿namespace LoudnessMeter.DataModel
+﻿namespace LoudnessMeter.DataModels
 {
     /// <summary>
     /// Information about channel configuration
