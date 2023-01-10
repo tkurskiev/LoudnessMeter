@@ -1,8 +1,11 @@
-﻿using CommunityToolkit.Mvvm.Collections;
+﻿using Avalonia.Controls;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LoudnessMeter.DataModels;
 using LoudnessMeter.Services;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,11 +30,14 @@ namespace LoudnessMeter.ViewModels
         [ObservableProperty]
         private bool _channelConfigurationListIsOpen = true;
 
+        [ObservableProperty] private double _volumePercentPosition;
+
+        [ObservableProperty] private double _volumeContainerSize;
+
         [ObservableProperty]
         private ObservableGroupedCollection<string, ChannelConfigurationItem>? _channelConfigurations = default;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(ChannelConfigurationButtonText))]
+        [ObservableProperty] [NotifyPropertyChangedFor(nameof(ChannelConfigurationButtonText))]
         private ChannelConfigurationItem? _selectedChannelConfiguration;
 
         public string ChannelConfigurationButtonText => SelectedChannelConfiguration?.ShortText ?? "Select Channel";
@@ -64,6 +70,8 @@ namespace LoudnessMeter.ViewModels
         public MainViewModel(IAudioInterfaceService audioInterfaceService)
         {
             _audioInterfaceService = audioInterfaceService;
+
+            Initialize();
         }
 
         /// <summary>
@@ -72,6 +80,38 @@ namespace LoudnessMeter.ViewModels
         public MainViewModel()
         {
             _audioInterfaceService = new DummyAudioInterfaceService();
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            // Temp code to move volume position
+
+            var tick = 0;
+            var input = 0.0;
+
+            var tempTime = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1 / 60.0)
+            };
+
+            tempTime.Tick += (s, e) =>
+            {
+                tick++;
+
+                // Slow down ticks
+                input = tick / 20f;
+
+                // Scale value
+                var scale = _volumeContainerSize / 2f; // Because sine wave goes from -1..1, and that's is not mush of a movement...
+
+                VolumePercentPosition = (Math.Sin(input) + 1) * scale;
+
+
+            };
+
+            tempTime.Start();
         }
 
         [RelayCommand]
